@@ -14,9 +14,7 @@ sdist/
 *.egg-info/
 .installed.cfg
 *.egg
-
-# Sphinx documentation
-docs/build/
+data/*
 
 # notebooks
 *.ipynb

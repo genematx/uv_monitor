@@ -3,6 +3,27 @@ IMAGE_NAME = "uv_monitor"
 PWD = $(shell pwd)
 TEST_PATH = tests
 
+#- Download and prepare the data
+# Define the list of URLs
+urls := \
+  https://uvb.nrel.colostate.edu/uvbdata/erythemal/locations/NewZealand-erythemal.zip
+
+# Download the archives
+archives:
+	mkdir -p ./data
+	for url in $(urls); do \
+    	echo "Downloading $$url"; \
+		wget -P ./data $$url; \
+	done
+
+# Unzip the archives
+unzipped: archives
+	for archive in ./data/*.zip; do \
+    	echo "Extracting $$archive"; \
+    	unzip -o -qq $$archive -d ./data; \
+    	rm $$archive; \
+	done
+
 #- Development and Debugging
 ## Build the development Docker image
 build: 
