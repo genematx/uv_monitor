@@ -34,7 +34,7 @@ build:
 bash: build
 	docker run -it --rm \
 	-e CI \
-	-v $(PWD):/opt/project \
+	-v $(PWD):/workspace \
 	$(IMAGE_NAME):dev bash 
 
 #- Testing and formatting
@@ -42,7 +42,7 @@ bash: build
 test: build
 	docker run --rm \
 	-e CI \
-	-v $(PWD):/opt/project \
+	-v $(PWD):/workspace \
 	$(IMAGE_NAME):dev \
 	test $(if $(test-args),$(test-args),$(TEST_PATH))
 
@@ -50,8 +50,7 @@ test: build
 lint: build
 	docker run --rm \
 	-e CI \
-	-v $(PWD)/docker/venv:/opt/venv \
-	-v $(PWD):/opt/project \
+	-v $(PWD):/workspace \
 	$(IMAGE_NAME):dev \
 	lint
 
@@ -59,8 +58,7 @@ lint: build
 fmt: build
 	docker run --rm \
 	-e CI \
-	-v $(PWD)/docker/venv:/opt/venv \
-	-v $(PWD):/opt/project \
+	-v $(PWD):/workspace \
 	$(IMAGE_NAME):dev \
 	fmt $(isort-args) $(black-args)
 
