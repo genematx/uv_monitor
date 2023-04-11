@@ -1,0 +1,31 @@
+name: uv_monitor
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request: test
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Test Coverage
+        run: make test test-args=--junitxml=report.xml DEV_TAG=${{ vars.BUILD_TAG }}-${{ github.sha }}
+
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-coverage-report
+          path: |
+            output/test/test-coverage.xml
+            report.xml
+          retention-days: 1
+
+      - name: Lint
+        run: |
+          make fmt black-args=--check isort-args='--check-only --diff' DEV_TAG=${{ vars.BUILD_TAG }}-${{ github.sha }}
+          make lint DEV_TAG=${{ vars.BUILD_TAG }}-${{ github.sha }}
