@@ -19,16 +19,17 @@ RUN curl -sSL https://install.python-poetry.org | python3 -
 ENV PATH="$PATH:/root/.local/bin"
 RUN poetry config virtualenvs.create false
 COPY ./pyproject.toml pyproject.toml
+COPY ./poetry.lock poetry.lock
+
+COPY ./src/ src/
 
 COPY ./docker/entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["bash", "/entrypoint.sh"]
 
 FROM base AS dev
 # Install all packages
-COPY ./ /workspace/
 RUN poetry install
 
 FROM base AS prod
 # Install only prod packages
-COPY ./src/ src/
 RUN poetry install  --no-dev

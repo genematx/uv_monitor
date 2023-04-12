@@ -3,6 +3,29 @@ IMAGE_NAME = "uv_monitor"
 PWD = $(shell pwd)
 TEST_PATH = tests
 
+#- Download and prepare the data
+# Define the list of URLs
+urls := \
+  https://uvb.nrel.colostate.edu/uvbdata/erythemal/years/2022-Erythemal.zip \
+  https://uvb.nrel.colostate.edu/uvbdata/erythemal/locations/Colorado-SteamboatSprings-erythemal.zip \
+  https://uvb.nrel.colostate.edu/uvbdata/erythemal/locations/NewZealand-erythemal.zip
+
+# Download the archives
+download-data:
+	mkdir -p ./data
+	for url in $(urls); do \
+    	echo "Downloading $$url"; \
+		wget -P ./data $$url; \
+	done
+
+# Unzip the archives
+unzip-data: download-data
+	for archive in ./data/*.zip; do \
+    	echo "Extracting $$archive"; \
+    	unzip -o -qq $$archive -d ./data; \
+    	rm $$archive; \
+	done
+
 #- Development and Debugging
 ## Build the development Docker image
 build: 
@@ -13,7 +36,7 @@ build:
 bash: build
 	docker run -it --rm \
 	-e CI \
-	-v $(PWD):/opt/project \
+	-v $(PWD):/workspace \
 	$(IMAGE_NAME):dev bash 
 
 #- Testing and formatting
@@ -21,7 +44,7 @@ bash: build
 test: build
 	docker run --rm \
 	-e CI \
-	-v $(PWD):/opt/project \
+	-v $(PWD):/workspace \
 	$(IMAGE_NAME):dev \
 	test $(if $(test-args),$(test-args),$(TEST_PATH))
 
@@ -29,8 +52,7 @@ test: build
 lint: build
 	docker run --rm \
 	-e CI \
-	-v $(PWD)/docker/venv:/opt/venv \
-	-v $(PWD):/opt/project \
+	-v $(PWD):/workspace \
 	$(IMAGE_NAME):dev \
 	lint
 
@@ -38,8 +60,7 @@ lint: build
 fmt: build
 	docker run --rm \
 	-e CI \
-	-v $(PWD)/docker/venv:/opt/venv \
-	-v $(PWD):/opt/project \
+	-v $(PWD):/workspace \
 	$(IMAGE_NAME):dev \
 	fmt $(isort-args) $(black-args)
 
