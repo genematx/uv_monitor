@@ -54,6 +54,6 @@ def read_csv_file(filepath: str, num_header_rows:int = 18) -> Union[pd.DataFrame
             header += f.readline()
 
         # read data part of CSV file into dataframe
-        df = pd.read_csv(StringIO(f.read()))
+        df = pd.read_csv(StringIO(f.read()), low_memory=False)
 
     return df, header
