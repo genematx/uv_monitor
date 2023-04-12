@@ -39,6 +39,6 @@ def test_read_csv_file(sample_csv):
 #Longitude: 112.184000 W
 #Elevation: 2073.000 m
 #Internal ID: AZ01\n'''
-    df, header = read_csv_file(sample_csv, num_header_rows=5)
+    df, header = read_csv_file(sample_csv)
     assert df.equals(expected_df)
     assert header == expected_header

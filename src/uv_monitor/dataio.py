@@ -1,6 +1,9 @@
 import pandas as pd
 from io import StringIO
 from typing import Union
+import os
+
+from .logging import logger
 
 def parse_header(header: str) -> dict:
     """Parse the header of an erythemal weighted irradiance data file into a dictionary.
@@ -35,12 +38,13 @@ def parse_header(header: str) -> dict:
     return result
 
 
-def read_csv_file(filepath: str, num_header_rows:int = 18) -> Union[pd.DataFrame, str]:
+def read_csv_file(filepath: str) -> Union[pd.DataFrame, str]:
     """Read a CSV file into a pandas dataframe and return the header rows as a string.
+
+    The topmost rows starting with # are considered to be the header.
     
     Args:
         filepath (str): The path to the CSV file.
-        num_header_rows (int): The number of header rows to read into the string buffer.
 
     Returns:
         A dataframe containing the data from the CSV file and a string containing the
@@ -50,10 +54,47 @@ def read_csv_file(filepath: str, num_header_rows:int = 18) -> Union[pd.DataFrame
     with open(filepath, 'r') as f:
         # read header rows into string buffer
         header = ''
-        for i in range(num_header_rows):
-            header += f.readline()
+        for line in f:
+            if line.startswith('#'):
+                header += line
+            else:
+                break
 
-        # read data part of CSV file into dataframe
-        df = pd.read_csv(StringIO(f.read()), low_memory=False)
+        # read data part of CSV file into dataframe (incl. the last line read in loop)
+        df = pd.read_csv(StringIO(line + f.read()), low_memory=False)
 
     return df, header
+
+
+
+def read_folder(dirpath: str) -> Union[pd.DataFrame, pd.DataFrame]:
+    """Read all CSV files in a folder and merge the data into a single dataframe.
+
+    The header rows of each file are parsed and used to create a dataframe of locations.
+
+    Args:
+        dirpath (str): The path to the folder containing the CSV files.
+
+    Returns:
+        Two dataframes: one containing the merged data from all CSV files and one with
+        the locations attributes.
+    """
+
+    # filter only csv files
+    all_files = [file for file in os.listdir(dirpath) if file.endswith('.csv')]
+    logger.info(f"Found {len(all_files)} CSV files in {dirpath}")
+
+    dfs, headers = [], []
+    for file in all_files:
+        logger.info(f"Reading data from {file}")
+        df, header = read_csv_file(os.path.join(dirpath, file))
+        dfs.append(df)
+        headers.append(header)
+
+    # merge all dataframes into one
+    merged_df = pd.concat(dfs, ignore_index=True)
+    
+    # Create a dataframe of unique locations
+    df_loc = pd.DataFrame([parse_header(h) for h in headers]).drop_duplicates('loc_id')
+
+    return merged_df, df_loc
