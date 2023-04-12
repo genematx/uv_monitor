@@ -15,6 +15,7 @@ sdist/
 .installed.cfg
 *.egg
 data/*
+.env
 
 # notebooks
 *.ipynb
