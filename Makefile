@@ -6,10 +6,12 @@ TEST_PATH = tests
 #- Download and prepare the data
 # Define the list of URLs
 urls := \
+  https://uvb.nrel.colostate.edu/uvbdata/erythemal/years/2022-Erythemal.zip \
+  https://uvb.nrel.colostate.edu/uvbdata/erythemal/locations/Colorado-SteamboatSprings-erythemal.zip \
   https://uvb.nrel.colostate.edu/uvbdata/erythemal/locations/NewZealand-erythemal.zip
 
 # Download the archives
-archives:
+download-data:
 	mkdir -p ./data
 	for url in $(urls); do \
     	echo "Downloading $$url"; \
@@ -17,7 +19,7 @@ archives:
 	done
 
 # Unzip the archives
-unzipped: archives
+unzip-data: download-data
 	for archive in ./data/*.zip; do \
     	echo "Extracting $$archive"; \
     	unzip -o -qq $$archive -d ./data; \
