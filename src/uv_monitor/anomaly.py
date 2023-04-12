@@ -15,7 +15,9 @@ class DailyAnomalyDetector:
         clip_negative (bool): Whether to clip predicted negative values to zero.
     """
 
-    def __init__(self, model: str = "prophet", conf_interval: float = 0.95, clip_negative=True):
+    def __init__(
+        self, model: str = "prophet", conf_interval: float = 0.95, clip_negative=True
+    ):
         # TODO: add other models
         if model == "prophet":
             self._model = Prophet(
