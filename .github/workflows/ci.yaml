@@ -1,20 +1,26 @@
 name: uv_monitor
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request: test
-    branches: [ "master" ]
+on: [push]
 
 jobs:
   test:
+
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
       - name: Test Coverage
-        run: make test test-args=--junitxml=report.xml DEV_TAG=${{ vars.BUILD_TAG }}-${{ github.sha }}
+        run: make test
 
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
@@ -27,5 +33,5 @@ jobs:
 
       - name: Lint
         run: |
-          make fmt black-args=--check isort-args='--check-only --diff' DEV_TAG=${{ vars.BUILD_TAG }}-${{ github.sha }}
-          make lint DEV_TAG=${{ vars.BUILD_TAG }}-${{ github.sha }}
+          make fmt black-args=--check isort-args='--check-only --diff'
+          make lint
