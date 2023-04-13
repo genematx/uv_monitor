@@ -1,5 +1,3 @@
-from typing import Union
-
 import pandas as pd
 from prophet import Prophet
 
