@@ -69,6 +69,13 @@ build-prod:
 	docker build \
 	-t $(IMAGE_NAME):latest -f docker/Dockerfile --target=prod .
 
+##
+run-app: build-prod
+	docker run --rm \
+	-v $(PWD):/workspace \
+	-p 7860:7860 \
+	$(IMAGE_NAME):latest poetry run python3 app/app.py
+
 ## Prune Docker containers, networks, and images
 clean:
 	docker system prune -f

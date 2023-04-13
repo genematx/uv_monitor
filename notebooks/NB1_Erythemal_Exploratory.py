@@ -26,6 +26,8 @@ import pandas as pd
 from prophet import Prophet
 import sqlite3
 
+import numpy as np
+import seaborn as sns
 # -
 
 from uv_monitor.logging import logger
@@ -107,14 +109,8 @@ ser_nz = (
     .squeeze()
 )
 
-ser_co.plot()
+# ser_co.plot()
 # -
-
-from prophet import Prophet
-
-# Data processing
-import numpy as np
-import seaborn as sns
 
 data_CO = (
     df_daily.loc[df_daily["loc_id"] == "CO11", ["date", "avg_erythemal"]]
@@ -158,4 +154,3 @@ plot_anomaly(
 )
 
 plt.show()
-# -

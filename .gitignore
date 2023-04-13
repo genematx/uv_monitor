@@ -18,10 +18,10 @@ data/*
 .env
 
 # notebooks
-*.ipynb
+# *.ipynb
 .ipynb_checkpoints/*
 .ipynb_checkpoints
-notebooks/*.ipynb
+# notebooks/*.ipynb     # Don't push ipynb files to remote; use jupytext to restore them
 notebooks/.ipynb_checkpoints/*
 notebooks/.ipynb_checkpoints
 
