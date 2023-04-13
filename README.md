@@ -9,7 +9,7 @@ The dataset can be downloaded from the oficial NREL [website](https://uvb.nrel.c
 
 The code is written in tested in Python 3.11. The required packages are managed with [poetry](https://python-poetry.org/), and the software is conteinerized with [Docker](https://www.docker.com/).
 
-The database querying functionality uses the OpenAI GPT model and requires an API key to be set up; the key can be obtained [here](https://openai.com/blog/openai-api).
+The database querying functionality uses the OpenAI GPT model and requires an API key to be set up; the key can be obtained [here](https://openai.com/blog/openai-api). The key can be exported as an environment variable. Alternatively, create an `.env` file in the root directory and declare the key in it: `OPENAI_API_KEY="key_value_obtained_from_openai"`.
 
 
 ## Repository Contents
