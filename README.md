@@ -5,7 +5,7 @@ An example repository exploring the UV-B monitoring dataset from the [National R
 
 ## Getting Started
 
-The dataset can be downloaded from the oficial NREL [website](https://uvb.nrel.colostate.edu/UVB/data-sets-download/). In this example, we use the Erythemal weighted irradiance data for locations in Colorao and New Zealand; the required csv files can be downloaded and prepared with a convenience script by running `make unzip-data` in the terminal.
+The dataset can be downloaded from the oficial NREL [website](https://uvb.nrel.colostate.edu/UVB/data-sets-download/). In this example, we use the Erythemal weighted irradiance data for locations in Colorado and New Zealand; the required csv files can be downloaded and prepared with a convenience script by running `make unzip-data` in the terminal.
 
 The code is written in tested in Python 3.11. The required packages are managed with [poetry](https://python-poetry.org/), and the software is conteinerized with [Docker](https://www.docker.com/).
 
