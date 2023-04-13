@@ -25,11 +25,12 @@ import pandas as pd
 from langchain import OpenAI, SQLDatabase, SQLDatabaseChain
 
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # +
 # create a connection to the SQLite database
-conn = sqlite3.connect('../data/uvb.db')
+conn = sqlite3.connect("../data/uvb.db")
 
 # query the database using SQL
 query = "SELECT * \
@@ -51,7 +52,6 @@ db = SQLDatabase.from_uri("sqlite:///../data/uvb.db")
 llm = OpenAI(temperature=0)
 db_chain = SQLDatabaseChain(llm=llm, database=db, verbose=True)
 # db_chain.run("Which location has seen the highest total erythemal irradiance in March 2022?")
-db_chain.run("Across all locations in Colorado, what was the sunniest day in March 2022?")
-
-
-
+db_chain.run(
+    "Across all locations in Colorado, what was the sunniest day in March 2022?"
+)
